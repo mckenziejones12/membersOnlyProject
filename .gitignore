@@ -1,0 +1,5 @@
+# ignore node_module
+node_modules
+
+# hide MongoDB URI
+.env
