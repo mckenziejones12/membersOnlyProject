@@ -6,6 +6,8 @@ const logger = require("morgan");
 require("dotenv").config();
 const mongoose = require("mongoose");
 
+const API_PREFIX = "/api";
+
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const messagesRouter = require("./routes/messages");
@@ -30,9 +32,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Registering my routes
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/messages", messagesRouter);
+app.use(`${API_PREFIX}/users`, usersRouter);
+app.use(`${API_PREFIX}/messages`, messagesRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -47,7 +50,7 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render("error");
+  res.send("error");
 });
 
 module.exports = app;
