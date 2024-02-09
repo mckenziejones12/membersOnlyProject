@@ -4,6 +4,7 @@ const Member = require("../models/member");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.SECRET_TOKEN;
 const bcrypt = require("bcryptjs");
+const member = require("../models/member");
 
 // Handle login form
 exports.member_login_post = asyncHandler(async (req, res, next) => {
@@ -26,15 +27,24 @@ exports.member_login_post = asyncHandler(async (req, res, next) => {
     } else {
       // compare given password with hashed password
       bcrypt.compare(password, member.password).then((result) => {
-        console.log("the result: ", result);
-        result
-          ? res.status(200).json({
-              message: "Login successful",
-              member,
-            })
-          : res.status(400).json({
-              message: "Login not successful",
-            });
+        if (result) {
+          const maxAge = 2 * 60 * 60; // 3 hours in seconds
+          const token = jwt.sign({ id: member._id, username }, jwtSecret, {
+            expiresIn: maxAge,
+          });
+          res.cookie("jwt", token, {
+            httpOnly: true,
+            maxAge: maxAge * 1000, // 3 hours in milliseconds
+          });
+          res.status(201).json({
+            message: "Login successful",
+            member: member._id,
+          });
+        } else {
+          res.status(400).json({
+            message: "Login not successful",
+          });
+        }
       });
     }
   } catch (error) {
