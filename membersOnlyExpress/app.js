@@ -37,6 +37,10 @@ app.use("/", indexRouter);
 app.use(`${API_PREFIX}/users`, usersRouter);
 app.use(`${API_PREFIX}/messages`, messagesRouter);
 
+// app.get(`${API_PREFIX}/messages`, memberAuth, (req, res) => {
+//   res.send("Member Route");
+// });
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

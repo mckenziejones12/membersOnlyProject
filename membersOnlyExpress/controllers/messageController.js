@@ -41,6 +41,7 @@ exports.message_delete = asyncHandler(async (req, res, next) => {
   console.log("delete postman working");
   // 1. Find message trying to delete from route parameter id
   await Message.findByIdAndDelete(req.params.id).exec();
+  // 2. Delete message
   // 3. Send back response
   res.send(204);
 });
